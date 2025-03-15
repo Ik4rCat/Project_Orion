@@ -1,0 +1,120 @@
+@using Orion.Core.Models
+@using Orion.Core.Enums
+@using TaskStatus = Orion.Core.Enums.TaskStatus
+@model Orion.Web.Models.Dashboard.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Панель управления";
+}
+
+<div class="container">
+    <h1 class="mb-4">Панель управления</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Задачи</h5>
+                    <a asp-controller="Task" asp-action="Create" class="btn btn-sm btn-primary">Добавить</a>
+                </div>
+                <div class="card-body">
+                    @if (Model?.Tasks != null && Model.Tasks.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var task in Model.Tasks.Take(5))
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a asp-controller="Task" asp-action="Details" asp-route-id="@task.Id">
+                                        @task.Title
+                                    </a>
+                                    <span class="badge bg-@(task.Status == TaskStatus.Completed ? "success" : 
+                                                          task.Status == TaskStatus.InProgress ? "info" : 
+                                                          task.Status == TaskStatus.Deferred ? "warning" : 
+                                                          task.Status == TaskStatus.Cancelled ? "danger" : "primary")">
+                                        @task.Status
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                        <div class="mt-2">
+                            <a asp-controller="Task" asp-action="Index" class="btn btn-outline-secondary btn-sm">Все задачи</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">У вас пока нет задач</p>
+                        <a asp-controller="Task" asp-action="Create" class="btn btn-primary">Создать задачу</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Заметки</h5>
+                    <a asp-controller="Note" asp-action="Create" class="btn btn-sm btn-primary">Добавить</a>
+                </div>
+                <div class="card-body">
+                    @if (Model?.Notes != null && Model.Notes.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var note in Model.Notes.Take(5))
+                            {
+                                <li class="list-group-item">
+                                    <a asp-controller="Note" asp-action="Details" asp-route-id="@note.Id">
+                                        @note.Title
+                                    </a>
+                                    @if (note.IsFavorite)
+                                    {
+                                        <i class="bi bi-star-fill text-warning ml-2"></i>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                        <div class="mt-2">
+                            <a asp-controller="Note" asp-action="Index" class="btn btn-outline-secondary btn-sm">Все заметки</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">У вас пока нет заметок</p>
+                        <a asp-controller="Note" asp-action="Create" class="btn btn-primary">Создать заметку</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Группы</h5>
+                    <a asp-controller="Group" asp-action="Create" class="btn btn-sm btn-primary">Создать</a>
+                </div>
+                <div class="card-body">
+                    @if (Model?.Groups != null && Model.Groups.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var group in Model.Groups.Take(5))
+                            {
+                                <li class="list-group-item">
+                                    <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">
+                                        @group.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <div class="mt-2">
+                            <a asp-controller="Group" asp-action="Index" class="btn btn-outline-secondary btn-sm">Все группы</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Вы не состоите ни в одной группе</p>
+                        <a asp-controller="Group" asp-action="Create" class="btn btn-primary">Создать группу</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

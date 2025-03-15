@@ -1,0 +1,173 @@
+@using Orion.Core.Models
+@using Orion.Core.Enums
+@using TaskStatus = Orion.Core.Enums.TaskStatus
+@model Orion.Core.Models.Group
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+            {
+                <img src="@Model.AvatarUrl" alt="@Model.Name" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+            }
+            <h1 class="mb-0">@Model.Name</h1>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                <i class="bi bi-pencil"></i> Редактировать
+            </a>
+            <a asp-action="Manage" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                <i class="bi bi-people"></i> Участники
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> К списку
+            </a>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Description))
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="mb-0">@Model.Description</p>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Задачи группы</h5>
+                    <a asp-controller="Task" asp-action="Create" asp-route-groupId="@Model.Id" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus"></i> Добавить
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.Tasks != null && Model.Tasks.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var task in Model.Tasks.OrderByDescending(t => t.CreatedAt).Take(5))
+                            {
+                                <a href="@Url.Action("Details", "Task", new { id = task.Id })" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">@task.Title</h6>
+                                        <small class="text-muted">@(task.AssignedTo?.DisplayName ?? "Не назначено")</small>
+                                    </div>
+                                    <span class="badge bg-@(task.Status == TaskStatus.Completed ? "success" : 
+                                                          task.Status == TaskStatus.InProgress ? "info" : 
+                                                          task.Status == TaskStatus.Deferred ? "warning" : 
+                                                          task.Status == TaskStatus.Cancelled ? "danger" : "primary")">
+                                        @task.Status
+                                    </span>
+                                </a>
+                            }
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a asp-controller="Task" asp-action="Index" asp-route-groupId="@Model.Id" class="btn btn-outline-secondary btn-sm">Показать все задачи</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center py-3">В этой группе пока нет задач</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Заметки группы</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="createNoteDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-plus"></i> Добавить
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="createNoteDropdown">
+                            <li><a class="dropdown-item" asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Text" asp-route-groupId="@Model.Id">Текстовая</a></li>
+                            <li><a class="dropdown-item" asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Checklist" asp-route-groupId="@Model.Id">Чек-лист</a></li>
+                            <li><a class="dropdown-item" asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Markdown" asp-route-groupId="@Model.Id">Markdown</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (Model.Notes != null && Model.Notes.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var note in Model.Notes.OrderByDescending(n => n.CreatedAt).Take(5))
+                            {
+                                <a href="@Url.Action("Details", "Note", new { id = note.Id })" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">@note.Title</h6>
+                                        <small>@note.CreatedAt.ToString("dd.MM.yyyy")</small>
+                                    </div>
+                                    <small class="text-muted">Автор: @note.CreatedBy?.DisplayName</small>
+                                </a>
+                            }
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a asp-controller="Note" asp-action="Index" asp-route-groupId="@Model.Id" class="btn btn-outline-secondary btn-sm">Показать все заметки</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center py-3">В этой группе пока нет заметок</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Участники (@(Model.UserGroups?.Count ?? 0))</h5>
+            <a asp-action="Manage" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">
+                Управление участниками
+            </a>
+        </div>
+        <div class="card-body">
+            @if (Model.UserGroups != null && Model.UserGroups.Any())
+            {
+                <div class="row">
+                    @foreach (var userGroup in Model.UserGroups.Take(8))
+                    {
+                        <div class="col-md-3 col-sm-4 col-6 mb-3 text-center">
+                            <div class="user-avatar mb-2">
+                                @if (!string.IsNullOrEmpty(userGroup.User?.AvatarUrl))
+                                {
+                                    <img src="@userGroup.User.AvatarUrl" alt="@userGroup.User.DisplayName" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #e9ecef; margin: 0 auto;">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div>
+                                <span class="d-block">@userGroup.User?.DisplayName</span>
+                                <small class="text-muted">@(userGroup.Role == Orion.Core.Enums.GroupRole.Admin || userGroup.Role == Orion.Core.Enums.GroupRole.Owner ? "Администратор" : "Участник")</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+                @if (Model.UserGroups.Count > 8)
+                {
+                    <div class="text-center mt-3">
+                        <a asp-action="Manage" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">
+                            Показать всех участников
+                        </a>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted text-center py-3">В этой группе нет участников</p>
+            }
+        </div>
+    </div>
+</div>

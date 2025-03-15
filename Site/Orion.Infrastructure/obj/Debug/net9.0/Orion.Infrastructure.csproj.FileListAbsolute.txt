@@ -1,0 +1,16 @@
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\bin\Debug\net9.0\Orion.Infrastructure.deps.json
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\bin\Debug\net9.0\Orion.Infrastructure.dll
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\bin\Debug\net9.0\Orion.Infrastructure.pdb
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\bin\Debug\net9.0\Orion.Core.dll
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\bin\Debug\net9.0\Orion.Core.pdb
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.Infrastructure.AssemblyInfo.cs
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.Infrastructure.sourcelink.json
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.In.3AB64C37.Up2Date
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.Infrastructure.dll
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\refint\Orion.Infrastructure.dll
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\Orion.Infrastructure.pdb
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Infrastructure\obj\Debug\net9.0\ref\Orion.Infrastructure.dll

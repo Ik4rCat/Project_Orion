@@ -1,0 +1,67 @@
+@using Orion.Core.Models
+@model List<Group>
+
+@{
+    ViewData["Title"] = "Группы";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Группы</h1>
+        <a asp-controller="Group" asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus"></i> Создать группу
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var group in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">@group.Name</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-link text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-controller="Group" asp-action="Edit" asp-route-id="@group.Id">Редактировать</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Group" asp-action="Manage" asp-route-id="@group.Id">Управление участниками</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" asp-controller="Group" asp-action="Delete" asp-route-id="@group.Id">Удалить</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id" class="text-decoration-none text-dark">
+                                @if (!string.IsNullOrEmpty(group.AvatarUrl))
+                                {
+                                    <div class="text-center mb-3">
+                                        <img src="@group.AvatarUrl" alt="@group.Name" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                    </div>
+                                }
+                                <p class="card-text">@(string.IsNullOrEmpty(group.Description) ? "Нет описания" : (group.Description.Length > 100 ? group.Description.Substring(0, 100) + "..." : group.Description))</p>
+                            </a>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Участников: @(group.UserGroups?.Count ?? 0)</small>
+                                <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id" class="btn btn-sm btn-outline-primary">Перейти</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <p class="lead">У вас пока нет групп</p>
+            <p>Создайте группу для совместной работы с другими участниками</p>
+            <a asp-controller="Group" asp-action="Create" class="btn btn-primary mt-3">Создать группу</a>
+        </div>
+    }
+</div> 

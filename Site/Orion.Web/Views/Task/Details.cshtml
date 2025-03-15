@@ -1,0 +1,150 @@
+@using Orion.Core.Enums
+@using TaskStatus = Orion.Core.Enums.TaskStatus
+@model Orion.Core.Models.TaskItem
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>@Model.Title</h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                <i class="bi bi-pencil"></i> Редактировать
+            </a>
+            @if (Model.GroupId.HasValue)
+            {
+                <a asp-controller="Group" asp-action="Details" asp-route-id="@Model.GroupId" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> К группе
+                </a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> К списку
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="mb-4">
+                            <h5>Описание</h5>
+                            <p class="mb-0">@Model.Description</p>
+                        </div>
+                    }
+
+                    @if (Model.SubTasks != null && Model.SubTasks.Any())
+                    {
+                        <div class="mb-4">
+                            <h5>Подзадачи</h5>
+                            <div class="list-group">
+                                @foreach (var subTask in Model.SubTasks.OrderBy(st => st.Order))
+                                {
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" disabled @(subTask.IsCompleted ? "checked" : "")>
+                                            <label class="form-check-label @(subTask.IsCompleted ? "text-decoration-line-through" : "")">
+                                                @subTask.Title
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Информация о задаче</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Статус</th>
+                                <td>
+                                    <span class="badge bg-@(Model.Status == TaskStatus.Completed ? "success" : 
+                                                          Model.Status == TaskStatus.InProgress ? "info" : 
+                                                          Model.Status == TaskStatus.Deferred ? "warning" : 
+                                                          Model.Status == TaskStatus.Cancelled ? "danger" : "primary")">
+                                        @Model.Status
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Приоритет</th>
+                                <td>
+                                    <span class="badge bg-@(Model.Priority == Priority.Low ? "secondary" : 
+                                                          Model.Priority == Priority.Medium ? "primary" : 
+                                                          Model.Priority == Priority.High ? "warning" : "danger")">
+                                        @Model.Priority
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Исполнитель</th>
+                                <td>@(Model.AssignedTo?.DisplayName ?? "Не назначен")</td>
+                            </tr>
+                            <tr>
+                                <th>Срок выполнения</th>
+                                <td>
+                                    @if (Model.DueDate.HasValue)
+                                    {
+                                        <span class="@(Model.DueDate < DateTime.Now && Model.Status != TaskStatus.Completed ? "text-danger" : "")">
+                                            @Model.DueDate.Value.ToString("dd.MM.yyyy HH:mm")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Не указан</span>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Метки</th>
+                                <td>
+                                    @if (Model.TaskTags != null && Model.TaskTags.Any())
+                                    {
+                                        foreach (var tag in Model.TaskTags)
+                                        {
+                                            <span class="badge rounded-pill bg-secondary me-1">@tag.Tag.Name</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Нет меток</span>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Создана</th>
+                                <td>@(Model.CreatedAt)</td>
+                            </tr>
+                            <tr>
+                                <th>Обновлена</th>
+                                <td>@(Model.UpdatedAt)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // JavaScript для управления подзадачами и изменения статусов может быть добавлен здесь
+    </script>
+} 

@@ -1,0 +1,108 @@
+@using Orion.Core.Models
+@using Orion.Core.Enums
+@model List<Note>
+
+@{
+    ViewData["Title"] = "Заметки";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Заметки</h1>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="createNoteDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-plus"></i> Создать заметку
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="createNoteDropdown">
+                <li><a class="dropdown-item" asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Text">Текстовая</a></li>
+                <li><a class="dropdown-item" asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Checklist">Чек-лист</a></li>
+                <li><a class="dropdown-item" asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Markdown">Markdown</a></li>
+            </ul>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var note in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">@note.Title</h5>
+                            <div>
+                                @if (note.IsFavorite)
+                                {
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                }
+                                <div class="dropdown d-inline-block ms-2">
+                                    <button class="btn btn-sm btn-link text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" asp-controller="Note" asp-action="Edit" asp-route-id="@note.Id">Редактировать</a></li>
+                                        <li><a class="dropdown-item toggle-favorite" href="#" data-id="@note.Id">
+                                            @(note.IsFavorite ? "Убрать из избранного" : "Добавить в избранное")
+                                        </a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" asp-controller="Note" asp-action="Delete" asp-route-id="@note.Id">Удалить</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <a asp-controller="Note" asp-action="Details" asp-route-id="@note.Id" class="text-decoration-none text-dark">
+                                @if (note.Type == NoteType.Text)
+                                {
+                                    <p class="card-text">@(note.Content?.Length > 100 ? note.Content.Substring(0, 100) + "..." : note.Content)</p>
+                                }
+                                else if (note.Type == NoteType.Checklist)
+                                {
+                                    <div class="checklist-preview">
+                                        @{
+                                            var items = note.Content?.Split('\n').Take(3).ToList() ?? new List<string>();
+                                            foreach (var item in items)
+                                            {
+                                                if (string.IsNullOrEmpty(item)) continue;
+                                                <div class="form-check disabled">
+                                                    <input class="form-check-input" type="checkbox" disabled 
+                                                           @(item.StartsWith("[x]") ? "checked" : "")>
+                                                    <label class="form-check-label">
+                                                        @(item.StartsWith("[x]") ? item.Substring(3) : item.StartsWith("[ ]") ? item.Substring(3) : item)
+                                                    </label>
+                                                </div>
+                                            }
+                                            if ((note.Content?.Split('\n').Length ?? 0) > 3)
+                                            {
+                                                <p class="text-muted mt-2">И ещё элементы...</p>
+                                            }
+                                        }
+                                    </div>
+                                }
+                                else if (note.Type == NoteType.Markdown)
+                                {
+                                    <p class="card-text"><i class="bi bi-markdown me-2"></i>Markdown документ</p>
+                                }
+                            </a>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small>@note.UpdatedAt?.ToString("dd.MM.yyyy HH:mm")</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <p class="lead">У вас пока нет заметок</p>
+            <p>Создайте первую заметку, чтобы начать работу</p>
+            <div class="mt-3">
+                <a asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Text" class="btn btn-primary me-2">Текстовая заметка</a>
+                <a asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Checklist" class="btn btn-outline-secondary me-2">Чек-лист</a>
+                <a asp-controller="Note" asp-action="Create" asp-route-type="@NoteType.Markdown" class="btn btn-outline-secondary">Markdown</a>
+            </div>
+        </div>
+    }
+</div> 

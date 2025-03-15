@@ -1,0 +1,90 @@
+@using Orion.Core.Enums
+@using TaskStatus = Orion.Core.Enums.TaskStatus
+@model Orion.Core.Models.TaskItem
+
+@{
+    ViewData["Title"] = "Создание новой задачи";
+    var groupId = ViewBag.Group?.Id;
+    var groupName = ViewBag.Group?.Name;
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Создание новой задачи</h1>
+        <div>
+            @if (groupId != null)
+            {
+                <a asp-controller="Group" asp-action="Details" asp-route-id="@groupId" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Вернуться к группе
+                </a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> К списку задач
+                </a>
+            }
+        </div>
+    </div>
+
+    @if (groupId != null)
+    {
+        <div class="alert alert-info">
+            Вы создаете задачу для группы <strong>@groupName</strong>
+        </div>
+    }
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        @if (groupId != null)
+        {
+            <input type="hidden" asp-for="GroupId" value="@groupId" />
+        }
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Название задачи</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Описание задачи</label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label">Статус</label>
+                        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<TaskStatus>()"></select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Priority" class="form-label">Приоритет</label>
+                        <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<Priority>()"></select>
+                        <span asp-validation-for="Priority" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DueDate" class="form-label">Срок выполнения</label>
+                    <input asp-for="DueDate" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> Создать задачу
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

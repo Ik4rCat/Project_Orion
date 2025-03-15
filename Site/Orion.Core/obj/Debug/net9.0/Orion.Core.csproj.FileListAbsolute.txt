@@ -1,0 +1,13 @@
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\bin\Debug\net9.0\Orion.Core.deps.json
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\bin\Debug\net9.0\Orion.Core.dll
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\bin\Debug\net9.0\Orion.Core.pdb
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\Orion.Core.csproj.AssemblyReference.cache
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\Orion.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\Orion.Core.AssemblyInfoInputs.cache
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\Orion.Core.AssemblyInfo.cs
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\Orion.Core.csproj.CoreCompileInputs.cache
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\Orion.Core.sourcelink.json
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\Orion.Core.dll
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\refint\Orion.Core.dll
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\Orion.Core.pdb
+C:\Users\asus-alt\Documents\Programming_projects\Project_Orion\Site\Orion.Core\obj\Debug\net9.0\ref\Orion.Core.dll

@@ -1,0 +1,168 @@
+@using Orion.Core.Enums
+@model Orion.Core.Models.Note
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>@Model.Title</h1>
+        <div>
+            <button id="toggleFavorite" class="btn @(Model.IsFavorite ? "btn-warning" : "btn-outline-warning")" data-id="@Model.Id">
+                <i class="bi bi-star@(Model.IsFavorite ? "-fill" : "")"></i>
+                @(Model.IsFavorite ? "Избранное" : "В избранное")
+            </button>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                <i class="bi bi-pencil"></i> Редактировать
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> К списку
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>
+                        @if (Model.Type == NoteType.Text)
+                        {
+                            <i class="bi bi-file-text me-2"></i>@:Текстовая заметка
+                        }
+                        else if (Model.Type == NoteType.Checklist)
+                        {
+                            <i class="bi bi-check2-square me-2"></i>@:Чек-лист
+                        }
+                        else if (Model.Type == NoteType.Markdown)
+                        {
+                            <i class="bi bi-markdown me-2"></i>@:Markdown
+                        }
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Type == NoteType.Text)
+                    {
+                        <p class="white-space-pre-wrap">@Model.Content</p>
+                    }
+                    else if (Model.Type == NoteType.Checklist)
+                    {
+                        <div id="checklist-container" data-note-id="@Model.Id">
+                            @if (!string.IsNullOrEmpty(Model.Content))
+                            {
+                                var items = Model.Content.Split('\n');
+                                foreach (var item in items)
+                                {
+                                    if (string.IsNullOrEmpty(item)) continue;
+                                    var isChecked = item.StartsWith("[x]");
+                                    var text = isChecked ? item.Substring(3) : item.StartsWith("[ ]") ? item.Substring(3) : item;
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input checklist-item" type="checkbox" @(isChecked ? "checked" : "")
+                                               data-text="@text" />
+                                        <label class="form-check-label @(isChecked ? "text-decoration-line-through" : "")">
+                                            @text
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">Пустой список</p>
+                            }
+                        </div>
+                    }
+                    else if (Model.Type == NoteType.Markdown)
+                    {
+                        <div id="markdown-content">
+                            @* Здесь должен быть отрендеренный Markdown *@
+                            <pre>@Model.Content</pre>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Информация</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-md-5">Создана:</dt>
+                        <dd class="col-md-7">
+                            @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                        </dd>
+
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <dt class="col-md-5">Изменена:</dt>
+                            <dd class="col-md-7">
+                                @Model.UpdatedAt.Value.ToString("dd.MM.yyyy HH:mm")
+                            </dd>
+                        }
+
+                        <dt class="col-md-5">Автор:</dt>
+                        <dd class="col-md-7">
+                            @(Model.CreatedBy?.DisplayName ?? "Неизвестно")
+                        </dd>
+
+                        @if (Model.Group != null)
+                        {
+                            <dt class="col-md-5">Группа:</dt>
+                            <dd class="col-md-7">
+                                <a asp-controller="Group" asp-action="Details" asp-route-id="@Model.GroupId">
+                                    @Model.Group.Name
+                                </a>
+                            </dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Обработка чек-листа
+            $('.checklist-item').change(function() {
+                var $this = $(this);
+                var isChecked = $this.is(':checked');
+                var label = $this.next('label');
+                
+                if (isChecked) {
+                    label.addClass('text-decoration-line-through');
+                } else {
+                    label.removeClass('text-decoration-line-through');
+                }
+                
+                // Здесь должен быть AJAX для сохранения состояния
+            });
+            
+            // Обработка избранного
+            $('#toggleFavorite').click(function() {
+                var $this = $(this);
+                var noteId = $this.data('id');
+                var isFavorite = $this.hasClass('btn-warning');
+                
+                // Здесь должен быть AJAX для переключения избранного
+                // Для тестирования меняем внешний вид
+                if (isFavorite) {
+                    $this.removeClass('btn-warning').addClass('btn-outline-warning');
+                    $this.find('i').removeClass('bi-star-fill').addClass('bi-star');
+                    $this.text(' В избранное');
+                    $this.prepend('<i class="bi bi-star"></i>');
+                } else {
+                    $this.removeClass('btn-outline-warning').addClass('btn-warning');
+                    $this.find('i').removeClass('bi-star').addClass('bi-star-fill');
+                    $this.text(' Избранное');
+                    $this.prepend('<i class="bi bi-star-fill"></i>');
+                }
+            });
+        });
+    </script>
+} 

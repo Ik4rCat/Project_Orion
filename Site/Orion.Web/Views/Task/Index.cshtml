@@ -1,0 +1,127 @@
+@using Orion.Core.Enums
+@using TaskStatus = Orion.Core.Enums.TaskStatus
+@model IEnumerable<Orion.Core.Models.TaskItem>
+
+@{
+    ViewData["Title"] = "Задачи";
+    var groupId = ViewBag.GroupId as int?;
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Задачи</h1>
+        <div>
+            @if (groupId.HasValue)
+            {
+                <a asp-action="Create" asp-route-groupId="@groupId" class="btn btn-primary">
+                    <i class="bi bi-plus"></i> Новая задача
+                </a>
+                <a asp-controller="Group" asp-action="Details" asp-route-id="@groupId" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> К группе
+                </a>
+            }
+            else
+            {
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus"></i> Новая задача
+                </a>
+            }
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <p class="mb-0">
+                @if (groupId.HasValue)
+                {
+                    <text>В этой группе пока нет задач.</text>
+                }
+                else
+                {
+                    <text>У вас пока нет задач.</text>
+                }
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <div class="row">
+                    <div class="col-md-5">Название</div>
+                    <div class="col-md-2">Статус</div>
+                    <div class="col-md-2">Приоритет</div>
+                    <div class="col-md-2">Срок</div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+            <div class="list-group list-group-flush">
+                @foreach (var task in Model)
+                {
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <h5 class="mb-1">
+                                    <a asp-action="Details" asp-route-id="@task.Id" class="text-decoration-none">
+                                        @task.Title
+                                    </a>
+                                </h5>
+                                <small class="text-muted">
+                                    @if (task.AssignedTo != null)
+                                    {
+                                        <text>Исполнитель: @task.AssignedTo.DisplayName</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Исполнитель не назначен</text>
+                                    }
+                                </small>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="badge bg-@(task.Status == TaskStatus.Completed ? "success" : 
+                                                     task.Status == TaskStatus.InProgress ? "info" : 
+                                                     task.Status == TaskStatus.Deferred ? "warning" : 
+                                                     task.Status == TaskStatus.Cancelled ? "danger" : "primary")">
+                                    @task.Status
+                                </span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="badge bg-@(task.Priority == Priority.Low ? "secondary" : 
+                                                      task.Priority == Priority.Medium ? "primary" : 
+                                                      task.Priority == Priority.High ? "warning" : "danger")">
+                                    @task.Priority
+                                </span>
+                            </div>
+                            <div class="col-md-2">
+                                @if (task.DueDate.HasValue)
+                                {
+                                    <span class="@(task.DueDate < DateTime.Now ? "text-danger" : "")">
+                                        @task.DueDate.Value.ToString("dd.MM.yyyy")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Не указан</span>
+                                }
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" asp-action="Details" asp-route-id="@task.Id">Просмотр</a></li>
+                                        <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@task.Id">Редактировать</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@task.Id">Удалить</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div> 

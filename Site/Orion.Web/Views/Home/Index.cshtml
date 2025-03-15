@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Главная";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Добро пожаловать в Orion</h1>
+    <p>Система управления задачами и заметками</p>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Управление задачами</h5>
+            </div>
+            <div class="card-body">
+                <p>Создавайте и управляйте задачами. Отслеживайте статус выполнения.</p>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Начать работу</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Работа с заметками</h5>
+            </div>
+            <div class="card-body">
+                <p>Создавайте заметки в различных форматах: текст, чек-лист, markdown.</p>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-success">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+</div>
